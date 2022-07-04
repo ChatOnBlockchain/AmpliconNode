@@ -167,10 +167,9 @@ struct Hex {
  private:
   Hex(PadSpec spec, uint64_t v)
       : value(v),
-        width(spec == absl::kNoPad
-                  ? 1
-                  : spec >= absl::kSpacePad2 ? spec - absl::kSpacePad2 + 2
-                                             : spec - absl::kZeroPad2 + 2),
+        width(spec == absl::kNoPad       ? 1
+              : spec >= absl::kSpacePad2 ? spec - absl::kSpacePad2 + 2
+                                         : spec - absl::kZeroPad2 + 2),
         fill(spec >= absl::kSpacePad2 ? ' ' : '0') {}
 };
 
@@ -192,10 +191,9 @@ struct Dec {
                typename std::enable_if<(sizeof(Int) <= 8)>::type* = nullptr)
       : value(v >= 0 ? static_cast<uint64_t>(v)
                      : uint64_t{0} - static_cast<uint64_t>(v)),
-        width(spec == absl::kNoPad
-                  ? 1
-                  : spec >= absl::kSpacePad2 ? spec - absl::kSpacePad2 + 2
-                                             : spec - absl::kZeroPad2 + 2),
+        width(spec == absl::kNoPad       ? 1
+              : spec >= absl::kSpacePad2 ? spec - absl::kSpacePad2 + 2
+                                         : spec - absl::kZeroPad2 + 2),
         fill(spec >= absl::kSpacePad2 ? ' ' : '0'),
         neg(v < 0) {}
 };

@@ -41,7 +41,6 @@
 #include <utility>
 #include <vector>
 
-#include "gtest/gtest.h"
 #include "absl/algorithm/container.h"
 #include "absl/meta/type_traits.h"
 #include "absl/strings/ascii.h"
@@ -49,6 +48,7 @@
 #include "absl/strings/string_view.h"
 #include "absl/types/internal/conformance_testing_helpers.h"
 #include "absl/utility/utility.h"
+#include "gtest/gtest.h"
 
 // TODO(calabrese) Add support for extending profiles.
 
@@ -264,12 +264,10 @@ using PropertiesOfT = typename PropertiesOf<T>::type;
 enum class function_support { maybe, yes, nothrow, trivial };
 
 constexpr const char* PessimisticPropertyDescription(function_support v) {
-  return v == function_support::maybe
-             ? "no"
-             : v == function_support::yes
-                   ? "yes, potentially throwing"
-                   : v == function_support::nothrow ? "yes, nothrow"
-                                                    : "yes, trivial";
+  return v == function_support::maybe     ? "no"
+         : v == function_support::yes     ? "yes, potentially throwing"
+         : v == function_support::nothrow ? "yes, nothrow"
+                                          : "yes, trivial";
 }
 
 // Return a string that describes the kind of property support that was

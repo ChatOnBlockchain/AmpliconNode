@@ -28,12 +28,13 @@
 
 #ifdef ABSL_INTERNAL_HAVE_ELF_SYMBOLIZE
 #error ABSL_INTERNAL_HAVE_ELF_SYMBOLIZE cannot be directly set
-#elif defined(__ELF__) && defined(__GLIBC__) && !defined(__native_client__) \
-      && !defined(__asmjs__) && !defined(__wasm__)
+#elif defined(__ELF__) && defined(__GLIBC__) && !defined(__native_client__) && \
+    !defined(__asmjs__) && !defined(__wasm__)
 #define ABSL_INTERNAL_HAVE_ELF_SYMBOLIZE 1
 
 #include <elf.h>
 #include <link.h>  // For ElfW() macro.
+
 #include <functional>
 #include <string>
 
@@ -53,8 +54,8 @@ bool ForEachSection(int fd,
 
 // Gets the section header for the given name, if it exists. Returns true on
 // success. Otherwise, returns false.
-bool GetSectionHeaderByName(int fd, const char *name, size_t name_len,
-                            ElfW(Shdr) *out);
+bool GetSectionHeaderByName(int fd, const char* name, size_t name_len,
+                            ElfW(Shdr) * out);
 
 }  // namespace debugging_internal
 ABSL_NAMESPACE_END
@@ -80,7 +81,7 @@ namespace debugging_internal {
 
 struct SymbolDecoratorArgs {
   // The program counter we are getting symbolic name for.
-  const void *pc;
+  const void* pc;
   // 0 for main executable, load address for shared libraries.
   ptrdiff_t relocation;
   // Read-only file descriptor for ELF image covering "pc",
@@ -91,17 +92,17 @@ struct SymbolDecoratorArgs {
   // produced some output, and earlier decorators may have adorned it in
   // some way. You are free to replace or augment the contents (within the
   // symbol_buf_size limit).
-  char *const symbol_buf;
+  char* const symbol_buf;
   size_t symbol_buf_size;
   // Temporary scratch space, size.
   // Use that space in preference to allocating your own stack buffer to
   // conserve stack.
-  char *const tmp_buf;
+  char* const tmp_buf;
   size_t tmp_buf_size;
   // User-provided argument
   void* arg;
 };
-using SymbolDecorator = void (*)(const SymbolDecoratorArgs *);
+using SymbolDecorator = void (*)(const SymbolDecoratorArgs*);
 
 // Installs a function-pointer as a decorator. Returns a value less than zero
 // if the system cannot install the decorator. Otherwise, returns a unique

@@ -17,8 +17,6 @@
 
 #include <utility>
 
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
 #include "absl/base/config.h"
 #include "absl/base/macros.h"
 #include "absl/strings/cord.h"
@@ -28,6 +26,8 @@
 #include "absl/strings/internal/cordz_statistics.h"
 #include "absl/strings/internal/cordz_update_tracker.h"
 #include "absl/strings/str_cat.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 namespace absl {
 ABSL_NAMESPACE_BEGIN

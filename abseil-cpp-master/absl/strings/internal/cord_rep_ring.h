@@ -388,9 +388,7 @@ class CordRepRing : public CordRep {
   static void Destroy(CordRepRing* rep);
 
   // Returns a mutable reference to the logical end position array.
-  pos_type* entry_end_pos() {
-    return Layout::Partial().Pointer<0>(data_);
-  }
+  pos_type* entry_end_pos() { return Layout::Partial().Pointer<0>(data_); }
 
   // Returns a mutable reference to the child pointer array.
   CordRep** entry_child() {

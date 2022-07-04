@@ -49,7 +49,7 @@
 #ifndef ABSL_CONTAINER_BTREE_SET_H_
 #define ABSL_CONTAINER_BTREE_SET_H_
 
-#include "absl/container/internal/btree.h"  // IWYU pragma: export
+#include "absl/container/internal/btree.h"            // IWYU pragma: export
 #include "absl/container/internal/btree_container.h"  // IWYU pragma: export
 
 namespace absl {
@@ -83,11 +83,10 @@ struct set_params;
 //
 template <typename Key, typename Compare = std::less<Key>,
           typename Alloc = std::allocator<Key>>
-class btree_set
-    : public container_internal::btree_set_container<
-          container_internal::btree<container_internal::set_params<
-              Key, Compare, Alloc, /*TargetNodeSize=*/256,
-              /*IsMulti=*/false>>> {
+class btree_set : public container_internal::btree_set_container<
+                      container_internal::btree<container_internal::set_params<
+                          Key, Compare, Alloc, /*TargetNodeSize=*/256,
+                          /*IsMulti=*/false>>> {
   using Base = typename btree_set::btree_set_container;
 
  public:
@@ -723,7 +722,7 @@ void swap(btree_multiset<K, C, A> &x, btree_multiset<K, C, A> &y) {
 // Returns the number of erased elements.
 template <typename K, typename C, typename A, typename Pred>
 typename btree_multiset<K, C, A>::size_type erase_if(
-   btree_multiset<K, C, A> & set, Pred pred) {
+    btree_multiset<K, C, A> &set, Pred pred) {
   return container_internal::btree_access::erase_if(set, std::move(pred));
 }
 

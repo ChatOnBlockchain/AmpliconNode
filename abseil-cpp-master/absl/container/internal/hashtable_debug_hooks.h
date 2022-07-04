@@ -17,9 +17,8 @@
 #ifndef ABSL_CONTAINER_INTERNAL_HASHTABLE_DEBUG_HOOKS_H_
 #define ABSL_CONTAINER_INTERNAL_HASHTABLE_DEBUG_HOOKS_H_
 
-#include <cstddef>
-
 #include <algorithm>
+#include <cstddef>
 #include <type_traits>
 #include <vector>
 

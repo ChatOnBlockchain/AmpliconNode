@@ -58,7 +58,7 @@
 #include "absl/random/exponential_distribution.h"
 #include "absl/random/gaussian_distribution.h"
 #include "absl/random/internal/distribution_caller.h"  // IWYU pragma: export
-#include "absl/random/internal/uniform_helper.h"  // IWYU pragma: export
+#include "absl/random/internal/uniform_helper.h"       // IWYU pragma: export
 #include "absl/random/log_uniform_int_distribution.h"
 #include "absl/random/poisson_distribution.h"
 #include "absl/random/uniform_int_distribution.h"
@@ -176,7 +176,7 @@ Uniform(TagType tag,
 
   return random_internal::DistributionCaller<gen_t>::template Call<
       distribution_t>(&urbg, tag, static_cast<return_t>(lo),
-                                static_cast<return_t>(hi));
+                      static_cast<return_t>(hi));
 }
 
 // absl::Uniform(bitgen, lo, hi)
@@ -200,7 +200,7 @@ Uniform(URBG&& urbg,  // NOLINT(runtime/references)
 
   return random_internal::DistributionCaller<gen_t>::template Call<
       distribution_t>(&urbg, static_cast<return_t>(lo),
-                                static_cast<return_t>(hi));
+                      static_cast<return_t>(hi));
 }
 
 // absl::Uniform<unsigned T>(bitgen)

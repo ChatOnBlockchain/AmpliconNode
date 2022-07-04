@@ -270,8 +270,7 @@ std::string StrJoin(const Range& range, absl::string_view separator) {
 }
 
 template <typename T>
-std::string StrJoin(std::initializer_list<T> il,
-                    absl::string_view separator) {
+std::string StrJoin(std::initializer_list<T> il, absl::string_view separator) {
   return strings_internal::JoinRange(il, separator);
 }
 

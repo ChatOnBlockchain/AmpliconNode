@@ -67,10 +67,9 @@ inline bool StartsWith(absl::string_view text,
 // Returns whether a given string `text` ends with `suffix`.
 inline bool EndsWith(absl::string_view text,
                      absl::string_view suffix) noexcept {
-  return suffix.empty() ||
-         (text.size() >= suffix.size() &&
-          memcmp(text.data() + (text.size() - suffix.size()), suffix.data(),
-                 suffix.size()) == 0);
+  return suffix.empty() || (text.size() >= suffix.size() &&
+                            memcmp(text.data() + (text.size() - suffix.size()),
+                                   suffix.data(), suffix.size()) == 0);
 }
 
 // EqualsIgnoreCase()

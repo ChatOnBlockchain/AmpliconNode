@@ -291,7 +291,7 @@ class btree_set_container : public btree_container<Tree> {
     return this->tree_.insert_unique(params_type::key(v), std::move(v));
   }
   template <typename... Args>
-  std::pair<iterator, bool> emplace(Args &&... args) {
+  std::pair<iterator, bool> emplace(Args &&...args) {
     // Use a node handle to manage a temp slot.
     auto node = CommonAccess::Construct<node_type>(this->get_allocator(),
                                                    std::forward<Args>(args)...);
@@ -309,7 +309,7 @@ class btree_set_container : public btree_container<Tree> {
         .first;
   }
   template <typename... Args>
-  iterator emplace_hint(const_iterator hint, Args &&... args) {
+  iterator emplace_hint(const_iterator hint, Args &&...args) {
     // Use a node handle to manage a temp slot.
     auto node = CommonAccess::Construct<node_type>(this->get_allocator(),
                                                    std::forward<Args>(args)...);
@@ -458,22 +458,22 @@ class btree_map_container : public btree_set_container<Tree> {
   template <typename K = key_type, typename... Args,
             typename absl::enable_if_t<
                 !std::is_convertible<K, const_iterator>::value, int> = 0>
-  std::pair<iterator, bool> try_emplace(const key_arg<K> &k, Args &&... args) {
+  std::pair<iterator, bool> try_emplace(const key_arg<K> &k, Args &&...args) {
     return try_emplace_impl(k, std::forward<Args>(args)...);
   }
   template <typename K = key_type, typename... Args,
             typename absl::enable_if_t<
                 !std::is_convertible<K, const_iterator>::value, int> = 0>
-  std::pair<iterator, bool> try_emplace(key_arg<K> &&k, Args &&... args) {
+  std::pair<iterator, bool> try_emplace(key_arg<K> &&k, Args &&...args) {
     return try_emplace_impl(std::forward<K>(k), std::forward<Args>(args)...);
   }
   template <typename K = key_type, typename... Args>
   iterator try_emplace(const_iterator hint, const key_arg<K> &k,
-                       Args &&... args) {
+                       Args &&...args) {
     return try_emplace_hint_impl(hint, k, std::forward<Args>(args)...);
   }
   template <typename K = key_type, typename... Args>
-  iterator try_emplace(const_iterator hint, key_arg<K> &&k, Args &&... args) {
+  iterator try_emplace(const_iterator hint, key_arg<K> &&k, Args &&...args) {
     return try_emplace_hint_impl(hint, std::forward<K>(k),
                                  std::forward<Args>(args)...);
   }
@@ -522,13 +522,13 @@ class btree_map_container : public btree_set_container<Tree> {
   }
 
   template <class K, class... Args>
-  std::pair<iterator, bool> try_emplace_impl(K &&k, Args &&... args) {
+  std::pair<iterator, bool> try_emplace_impl(K &&k, Args &&...args) {
     return this->tree_.insert_unique(
         k, std::piecewise_construct, std::forward_as_tuple(std::forward<K>(k)),
         std::forward_as_tuple(std::forward<Args>(args)...));
   }
   template <class K, class... Args>
-  iterator try_emplace_hint_impl(const_iterator hint, K &&k, Args &&... args) {
+  iterator try_emplace_hint_impl(const_iterator hint, K &&k, Args &&...args) {
     return this->tree_
         .insert_hint_unique(iterator(hint), k, std::piecewise_construct,
                             std::forward_as_tuple(std::forward<K>(k)),
@@ -604,14 +604,14 @@ class btree_multiset_container : public btree_container<Tree> {
     this->tree_.insert_iterator_multi(init.begin(), init.end());
   }
   template <typename... Args>
-  iterator emplace(Args &&... args) {
+  iterator emplace(Args &&...args) {
     // Use a node handle to manage a temp slot.
     auto node = CommonAccess::Construct<node_type>(this->get_allocator(),
                                                    std::forward<Args>(args)...);
     return this->tree_.insert_multi(CommonAccess::GetSlot(node));
   }
   template <typename... Args>
-  iterator emplace_hint(const_iterator hint, Args &&... args) {
+  iterator emplace_hint(const_iterator hint, Args &&...args) {
     // Use a node handle to manage a temp slot.
     auto node = CommonAccess::Construct<node_type>(this->get_allocator(),
                                                    std::forward<Args>(args)...);

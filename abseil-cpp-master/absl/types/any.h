@@ -227,7 +227,7 @@ class any {
   template <typename T, typename... Args, typename VT = absl::decay_t<T>,
             absl::enable_if_t<absl::conjunction<
                 std::is_copy_constructible<VT>,
-                std::is_constructible<VT, Args...>>::value>* = nullptr>
+                std::is_constructible<VT, Args...> >::value>* = nullptr>
   explicit any(in_place_type_t<T> /*tag*/, Args&&... args)
       : obj_(new Obj<VT>(in_place, std::forward<Args>(args)...)) {}
 
@@ -240,7 +240,7 @@ class any {
       absl::enable_if_t<
           absl::conjunction<std::is_copy_constructible<VT>,
                             std::is_constructible<VT, std::initializer_list<U>&,
-                                                  Args...>>::value>* = nullptr>
+                                                  Args...> >::value>* = nullptr>
   explicit any(in_place_type_t<T> /*tag*/, std::initializer_list<U> ilist,
                Args&&... args)
       : obj_(new Obj<VT>(in_place, ilist, std::forward<Args>(args)...)) {}
@@ -264,8 +264,8 @@ class any {
   // Assigns an `absl::any` object with a "contained object" of the passed type.
   template <typename T, typename VT = absl::decay_t<T>,
             absl::enable_if_t<absl::conjunction<
-                absl::negation<std::is_same<VT, any>>,
-                std::is_copy_constructible<VT>>::value>* = nullptr>
+                absl::negation<std::is_same<VT, any> >,
+                std::is_copy_constructible<VT> >::value>* = nullptr>
   any& operator=(T&& rhs) {
     any tmp(in_place_type_t<VT>(), std::forward<T>(rhs));
     tmp.swap(*this);
@@ -433,7 +433,7 @@ template <typename T>
 struct any::IsInPlaceType : std::false_type {};
 
 template <typename T>
-struct any::IsInPlaceType<in_place_type_t<T>> : std::true_type {};
+struct any::IsInPlaceType<in_place_type_t<T> > : std::true_type {};
 
 inline void swap(any& x, any& y) noexcept { x.swap(y); }
 

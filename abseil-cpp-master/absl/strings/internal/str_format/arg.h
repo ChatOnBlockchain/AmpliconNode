@@ -470,13 +470,12 @@ class FormatArgImpl {
       return ToInt<T>(arg, static_cast<int*>(out), std::is_integral<T>(),
                       std::is_enum<T>());
     }
-    if (ABSL_PREDICT_FALSE(!Contains(ArgumentToConv<T>(),
-                                     spec.conversion_char()))) {
+    if (ABSL_PREDICT_FALSE(
+            !Contains(ArgumentToConv<T>(), spec.conversion_char()))) {
       return false;
     }
     return str_format_internal::FormatConvertImpl(
-               Manager<T>::Value(arg), spec,
-               static_cast<FormatSinkImpl*>(out))
+               Manager<T>::Value(arg), spec, static_cast<FormatSinkImpl*>(out))
         .value;
   }
 
@@ -517,7 +516,6 @@ class FormatArgImpl {
   ABSL_INTERNAL_FORMAT_DISPATCH_INSTANTIATE_(string_view, __VA_ARGS__)
 
 ABSL_INTERNAL_FORMAT_DISPATCH_OVERLOADS_EXPAND_(extern);
-
 
 }  // namespace str_format_internal
 ABSL_NAMESPACE_END

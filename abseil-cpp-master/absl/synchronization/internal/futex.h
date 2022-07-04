@@ -85,8 +85,7 @@ namespace synchronization_internal {
 
 class FutexImpl {
  public:
-  static int WaitUntil(std::atomic<int32_t> *v, int32_t val,
-                       KernelTimeout t) {
+  static int WaitUntil(std::atomic<int32_t> *v, int32_t val, KernelTimeout t) {
     int err = 0;
     if (t.has_timeout()) {
       // https://locklessinc.com/articles/futex_cheat_sheet/
@@ -94,10 +93,10 @@ class FutexImpl {
       struct timespec abs_timeout = t.MakeAbsTimespec();
       // Atomically check that the futex value is still 0, and if it
       // is, sleep until abs_timeout or until woken by FUTEX_WAKE.
-      err = syscall(
-          SYS_futex, reinterpret_cast<int32_t *>(v),
-          FUTEX_WAIT_BITSET | FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME, val,
-          &abs_timeout, nullptr, FUTEX_BITSET_MATCH_ANY);
+      err =
+          syscall(SYS_futex, reinterpret_cast<int32_t *>(v),
+                  FUTEX_WAIT_BITSET | FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME,
+                  val, &abs_timeout, nullptr, FUTEX_BITSET_MATCH_ANY);
     } else {
       // Atomically check that the futex value is still 0, and if it
       // is, sleep until woken by FUTEX_WAKE.

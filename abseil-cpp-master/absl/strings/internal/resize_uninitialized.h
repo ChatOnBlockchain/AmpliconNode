@@ -93,9 +93,7 @@ template <typename string_type>
 struct AppendUninitializedTraits<
     string_type, absl::void_t<decltype(std::declval<string_type&>()
                                            .__append_default_init(237))> > {
-  static void Append(string_type* s, size_t n) {
-    s->__append_default_init(n);
-  }
+  static void Append(string_type* s, size_t n) { s->__append_default_init(n); }
 };
 
 // Like STLStringResizeUninitialized(str, new_size), except guaranteed to use

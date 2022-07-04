@@ -34,8 +34,7 @@ constexpr int kMaxSmallPowerOfFive = 13;
 // The largest power that 10 that can be raised to, and still fit in a uint32_t.
 constexpr int kMaxSmallPowerOfTen = 9;
 
-ABSL_DLL extern const uint32_t
-    kFiveToNth[kMaxSmallPowerOfFive + 1];
+ABSL_DLL extern const uint32_t kFiveToNth[kMaxSmallPowerOfFive + 1];
 ABSL_DLL extern const uint32_t kTenToNth[kMaxSmallPowerOfTen + 1];
 
 // Large, fixed-width unsigned integer.
@@ -61,7 +60,9 @@ class BigUnsigned {
 
   BigUnsigned() : size_(0), words_{} {}
   explicit constexpr BigUnsigned(uint64_t v)
-      : size_((v >> 32) ? 2 : v ? 1 : 0),
+      : size_((v >> 32) ? 2
+              : v       ? 1
+                        : 0),
         words_{static_cast<uint32_t>(v & 0xffffffffu),
                static_cast<uint32_t>(v >> 32)} {}
 
@@ -124,7 +125,6 @@ class BigUnsigned {
       std::fill(words_, words_ + word_shift, 0u);
     }
   }
-
 
   // Multiplies by v in-place.
   void MultiplyBy(uint32_t v) {

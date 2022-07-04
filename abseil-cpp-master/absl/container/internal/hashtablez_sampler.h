@@ -140,9 +140,8 @@ inline void RecordEraseSlow(HashtablezInfo* info) {
   info->size.fetch_sub(1, std::memory_order_relaxed);
   // There is only one concurrent writer, so `load` then `store` is sufficient
   // instead of using `fetch_add`.
-  info->num_erases.store(
-      1 + info->num_erases.load(std::memory_order_relaxed),
-      std::memory_order_relaxed);
+  info->num_erases.store(1 + info->num_erases.load(std::memory_order_relaxed),
+                         std::memory_order_relaxed);
 }
 
 struct SamplingState {

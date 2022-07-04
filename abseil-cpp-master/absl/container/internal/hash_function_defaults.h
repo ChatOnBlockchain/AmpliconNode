@@ -46,6 +46,7 @@
 #define ABSL_CONTAINER_INTERNAL_HASH_FUNCTION_DEFAULTS_H_
 
 #include <stdint.h>
+
 #include <cstddef>
 #include <memory>
 #include <string>

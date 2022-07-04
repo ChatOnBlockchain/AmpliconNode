@@ -2242,9 +2242,7 @@ class raw_hash_set {
   // Prefetch the heap-allocated memory region to resolve potential TLB misses.
   // This is intended to overlap with execution of calculating the hash for a
   // key.
-  void prefetch_heap_block() const {
-    base_internal::PrefetchT2(ctrl_);
-  }
+  void prefetch_heap_block() const { base_internal::PrefetchT2(ctrl_); }
 
   HashtablezInfoHandle& infoz() { return settings_.template get<1>(); }
 

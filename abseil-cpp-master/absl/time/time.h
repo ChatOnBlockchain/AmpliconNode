@@ -584,7 +584,6 @@ bool ParseDuration(absl::string_view dur_string, Duration* d);
 // `absl::ParseDuration()`.
 bool AbslParseFlag(absl::string_view text, Duration* dst, std::string* error);
 
-
 // AbslUnparseFlag()
 //
 // Unparses a Duration value into a command-line string representation using
@@ -677,8 +676,7 @@ class Time {
   // `absl::TimeZone`.
   //
   // Deprecated. Use `absl::TimeZone::CivilInfo`.
-  struct
-      Breakdown {
+  struct Breakdown {
     int64_t year;        // year (e.g., 2013)
     int month;           // month of year [1:12]
     int day;             // day of month [1:31]
@@ -1169,8 +1167,7 @@ inline Time FromCivil(CivilSecond ct, TimeZone tz) {
 // `absl::ConvertDateTime()`. Legacy version of `absl::TimeZone::TimeInfo`.
 //
 // Deprecated. Use `absl::TimeZone::TimeInfo`.
-struct
-    TimeConversion {
+struct TimeConversion {
   Time pre;    // time calculated using the pre-transition offset
   Time trans;  // when the civil-time discontinuity occurred
   Time post;   // time calculated using the post-transition offset
@@ -1222,8 +1219,8 @@ TimeConversion ConvertDateTime(int64_t year, int mon, int day, int hour,
 // Deprecated. Use `absl::FromCivil(CivilSecond, TimeZone)`. Note that the
 // behavior of `FromCivil()` differs from `FromDateTime()` for skipped civil
 // times. If you care about that see `absl::TimeZone::At(absl::CivilSecond)`.
-inline Time FromDateTime(int64_t year, int mon, int day, int hour,
-                         int min, int sec, TimeZone tz) {
+inline Time FromDateTime(int64_t year, int mon, int day, int hour, int min,
+                         int sec, TimeZone tz) {
   return ConvertDateTime(year, mon, day, hour, min, sec, tz).pre;
 }
 
@@ -1461,13 +1458,15 @@ constexpr Duration FromInt64(int64_t v, std::ratio<60>) {
   return (v <= (std::numeric_limits<int64_t>::max)() / 60 &&
           v >= (std::numeric_limits<int64_t>::min)() / 60)
              ? MakeDuration(v * 60)
-             : v > 0 ? InfiniteDuration() : -InfiniteDuration();
+         : v > 0 ? InfiniteDuration()
+                 : -InfiniteDuration();
 }
 constexpr Duration FromInt64(int64_t v, std::ratio<3600>) {
   return (v <= (std::numeric_limits<int64_t>::max)() / 3600 &&
           v >= (std::numeric_limits<int64_t>::min)() / 3600)
              ? MakeDuration(v * 3600)
-             : v > 0 ? InfiniteDuration() : -InfiniteDuration();
+         : v > 0 ? InfiniteDuration()
+                 : -InfiniteDuration();
 }
 
 // IsValidRep64<T>(0) is true if the expression `int64_t{std::declval<T>()}` is
@@ -1495,24 +1494,16 @@ int64_t ToInt64(Duration d, Ratio) {
   return ToInt64Seconds(d * Ratio::den / Ratio::num);
 }
 // Fastpath implementations for the 6 common duration units.
-inline int64_t ToInt64(Duration d, std::nano) {
-  return ToInt64Nanoseconds(d);
-}
+inline int64_t ToInt64(Duration d, std::nano) { return ToInt64Nanoseconds(d); }
 inline int64_t ToInt64(Duration d, std::micro) {
   return ToInt64Microseconds(d);
 }
 inline int64_t ToInt64(Duration d, std::milli) {
   return ToInt64Milliseconds(d);
 }
-inline int64_t ToInt64(Duration d, std::ratio<1>) {
-  return ToInt64Seconds(d);
-}
-inline int64_t ToInt64(Duration d, std::ratio<60>) {
-  return ToInt64Minutes(d);
-}
-inline int64_t ToInt64(Duration d, std::ratio<3600>) {
-  return ToInt64Hours(d);
-}
+inline int64_t ToInt64(Duration d, std::ratio<1>) { return ToInt64Seconds(d); }
+inline int64_t ToInt64(Duration d, std::ratio<60>) { return ToInt64Minutes(d); }
+inline int64_t ToInt64(Duration d, std::ratio<3600>) { return ToInt64Hours(d); }
 
 // Converts an absl::Duration to a chrono duration of type T.
 template <typename T>
@@ -1561,13 +1552,12 @@ constexpr Duration operator-(Duration d) {
                        (std::numeric_limits<int64_t>::min)()
                    ? InfiniteDuration()
                    : time_internal::MakeDuration(-time_internal::GetRepHi(d))
-             : time_internal::IsInfiniteDuration(d)
-                   ? time_internal::OppositeInfinity(d)
-                   : time_internal::MakeDuration(
-                         time_internal::NegateAndSubtractOne(
-                             time_internal::GetRepHi(d)),
-                         time_internal::kTicksPerSecond -
-                             time_internal::GetRepLo(d));
+         : time_internal::IsInfiniteDuration(d)
+             ? time_internal::OppositeInfinity(d)
+             : time_internal::MakeDuration(
+                   time_internal::NegateAndSubtractOne(
+                       time_internal::GetRepHi(d)),
+                   time_internal::kTicksPerSecond - time_internal::GetRepLo(d));
 }
 
 constexpr Duration InfiniteDuration() {

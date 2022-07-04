@@ -121,10 +121,10 @@ auto TupleRefImpl(T&& t, absl::index_sequence<Is...>)
 // Returns a tuple of references to the elements of the input tuple. T must be a
 // tuple.
 template <class T>
-auto TupleRef(T&& t) -> decltype(
-    TupleRefImpl(std::forward<T>(t),
-                 absl::make_index_sequence<
-                     std::tuple_size<typename std::decay<T>::type>::value>())) {
+auto TupleRef(T&& t) -> decltype(TupleRefImpl(
+    std::forward<T>(t),
+    absl::make_index_sequence<
+        std::tuple_size<typename std::decay<T>::type>::value>())) {
   return TupleRefImpl(
       std::forward<T>(t),
       absl::make_index_sequence<
@@ -155,8 +155,8 @@ void ConstructFromTuple(Alloc* alloc, T* ptr, Tuple&& t) {
 // Constructs T using the args specified in the tuple and calls F with the
 // constructed value.
 template <class T, class Tuple, class F>
-decltype(std::declval<F>()(std::declval<T>())) WithConstructed(
-    Tuple&& t, F&& f) {
+decltype(std::declval<F>()(std::declval<T>())) WithConstructed(Tuple&& t,
+                                                               F&& f) {
   return memory_internal::WithConstructedImpl<T>(
       std::forward<Tuple>(t),
       absl::make_index_sequence<

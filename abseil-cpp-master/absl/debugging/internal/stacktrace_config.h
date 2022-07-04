@@ -28,7 +28,7 @@
 
 #elif defined(_WIN32)
 #define ABSL_STACKTRACE_INL_HEADER \
-    "absl/debugging/internal/stacktrace_win32-inl.inc"
+  "absl/debugging/internal/stacktrace_win32-inl.inc"
 
 #elif defined(__APPLE__)
 #ifdef ABSL_HAVE_THREAD_LOCAL

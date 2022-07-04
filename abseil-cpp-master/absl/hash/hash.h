@@ -385,8 +385,8 @@ class HashState : public hash_internal::HashStateBase<HashState> {
     // are the same type.  This isn't true in the SpyHash case, but SpyHash
     // types are move-convertible to each other, so this still works.
     T& real_state = state.Real<T>();
-    real_state = T::RunCombineUnordered(
-        std::move(real_state), CombineUnorderedInvoker<HashState>{f});
+    real_state = T::RunCombineUnordered(std::move(real_state),
+                                        CombineUnorderedInvoker<HashState>{f});
     return state;
   }
 

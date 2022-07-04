@@ -150,7 +150,7 @@ class Waiter {
   int wakeup_count_;
 
 #else
-  #error Unknown ABSL_WAITER_MODE
+#error Unknown ABSL_WAITER_MODE
 #endif
 };
 

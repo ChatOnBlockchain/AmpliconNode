@@ -164,8 +164,8 @@ std::true_type Or(std::initializer_list<bool>);
 // of CompressedTuple below.
 template <typename... Ts>
 constexpr bool ShouldAnyUseBase() {
-  return decltype(
-      Or({std::integral_constant<bool, ShouldUseBase<Ts>()>()...})){};
+  return decltype(Or(
+      {std::integral_constant<bool, ShouldUseBase<Ts>()>()...})){};
 }
 
 template <typename T, typename V>

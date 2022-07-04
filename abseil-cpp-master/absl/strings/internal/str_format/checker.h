@@ -163,30 +163,26 @@ class ConvParser {
   // If it is '*', we verify that it matches `args_`. `error_` is set if it
   // doesn't match.
   constexpr ConvParser ParseWidth() const {
-    return IsDigit(GetChar(format_, 0))
-               ? SetFormat(ParseDigits(format_).format)
-               : GetChar(format_, 0) == '*'
-                     ? is_positional_
-                           ? VerifyPositional(
-                                 ParsePositional(ConsumeFront(format_)), '*')
-                           : SetFormat(ConsumeFront(format_))
-                                 .ConsumeNextArg('*')
-                     : *this;
+    return IsDigit(GetChar(format_, 0)) ? SetFormat(ParseDigits(format_).format)
+           : GetChar(format_, 0) == '*'
+               ? is_positional_
+                     ? VerifyPositional(ParsePositional(ConsumeFront(format_)),
+                                        '*')
+                     : SetFormat(ConsumeFront(format_)).ConsumeNextArg('*')
+               : *this;
   }
 
   // Consume the precision.
   // If it is '*', we verify that it matches `args_`. `error_` is set if it
   // doesn't match.
   constexpr ConvParser ParsePrecision() const {
-    return GetChar(format_, 0) != '.'
-               ? *this
-               : GetChar(format_, 1) == '*'
-                     ? is_positional_
-                           ? VerifyPositional(
-                                 ParsePositional(ConsumeFront(format_, 2)), '*')
-                           : SetFormat(ConsumeFront(format_, 2))
-                                 .ConsumeNextArg('*')
-                     : SetFormat(ParseDigits(ConsumeFront(format_)).format);
+    return GetChar(format_, 0) != '.' ? *this
+           : GetChar(format_, 1) == '*'
+               ? is_positional_
+                     ? VerifyPositional(
+                           ParsePositional(ConsumeFront(format_, 2)), '*')
+                     : SetFormat(ConsumeFront(format_, 2)).ConsumeNextArg('*')
+               : SetFormat(ParseDigits(ConsumeFront(format_)).format);
   }
 
   // Consume the length characters.

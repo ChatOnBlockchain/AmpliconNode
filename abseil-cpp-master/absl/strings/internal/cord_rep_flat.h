@@ -75,9 +75,7 @@ static_assert(AllocatedSizeToTagUnchecked(kMaxLargeFlatSize) == MAX_FLAT_TAG,
 
 // RoundUp logically performs `((n + m - 1) / m) * m` to round up to the nearest
 // multiple of `m`, optimized for the invariant that `m` is a power of 2.
-constexpr size_t RoundUp(size_t n, size_t m) {
-  return (n + m - 1) & (0 - m);
-}
+constexpr size_t RoundUp(size_t n, size_t m) { return (n + m - 1) & (0 - m); }
 
 // Returns the size to the nearest equal or larger value that can be
 // expressed exactly as a tag value.
@@ -134,7 +132,7 @@ struct CordRepFlat : public CordRep {
   // Deletes a CordRepFlat instance created previously through a call to New().
   // Flat CordReps are allocated and constructed with raw ::operator new and
   // placement new, and must be destructed and deallocated accordingly.
-  static void Delete(CordRep*rep) {
+  static void Delete(CordRep* rep) {
     assert(rep->tag >= FLAT && rep->tag <= MAX_FLAT_TAG);
 
 #if defined(__cpp_sized_deallocation)

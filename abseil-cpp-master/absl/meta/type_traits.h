@@ -249,8 +249,8 @@ template <typename... Ts>
 struct disjunction : std::false_type {};
 
 template <typename T, typename... Ts>
-struct disjunction<T, Ts...> :
-      std::conditional<T::value, T, disjunction<Ts...>>::type {};
+struct disjunction<T, Ts...>
+    : std::conditional<T::value, T, disjunction<Ts...>>::type {};
 
 template <typename T>
 struct disjunction<T> : T {};
@@ -299,7 +299,7 @@ struct is_function
 template <typename T>
 struct is_trivially_destructible
     : std::integral_constant<bool, __has_trivial_destructor(T) &&
-                                   std::is_destructible<T>::value> {
+                                       std::is_destructible<T>::value> {
 #ifdef ABSL_HAVE_STD_IS_TRIVIALLY_DESTRUCTIBLE
  private:
   static constexpr bool compliant = std::is_trivially_destructible<T>::value ==
@@ -347,9 +347,10 @@ struct is_trivially_destructible
 // Nontrivially destructible types will cause the expression to be nontrivial.
 template <typename T>
 struct is_trivially_default_constructible
-    : std::integral_constant<bool, __has_trivial_constructor(T) &&
-                                   std::is_default_constructible<T>::value &&
-                                   is_trivially_destructible<T>::value> {
+    : std::integral_constant<bool,
+                             __has_trivial_constructor(T) &&
+                                 std::is_default_constructible<T>::value &&
+                                 is_trivially_destructible<T>::value> {
 #if defined(ABSL_HAVE_STD_IS_TRIVIALLY_CONSTRUCTIBLE) && \
     !defined(                                            \
         ABSL_META_INTERNAL_STD_CONSTRUCTION_TRAITS_DONT_CHECK_DESTRUCTION)
@@ -639,22 +640,23 @@ using common_type_t = typename std::common_type<T...>::type;
 template <typename T>
 using underlying_type_t = typename std::underlying_type<T>::type;
 
-
 namespace type_traits_internal {
 
 #if (defined(__cpp_lib_is_invocable) && __cpp_lib_is_invocable >= 201703L) || \
     (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 // std::result_of is deprecated (C++17) or removed (C++20)
-template<typename> struct result_of;
-template<typename F, typename... Args>
+template <typename>
+struct result_of;
+template <typename F, typename... Args>
 struct result_of<F(Args...)> : std::invoke_result<F, Args...> {};
 #else
-template<typename F> using result_of = std::result_of<F>;
+template <typename F>
+using result_of = std::result_of<F>;
 #endif
 
 }  // namespace type_traits_internal
 
-template<typename F>
+template <typename F>
 using result_of_t = typename type_traits_internal::result_of<F>::type;
 
 namespace type_traits_internal {
@@ -787,8 +789,8 @@ namespace type_traits_internal {
 // Make the swap-related traits/function accessible from this namespace.
 using swap_internal::IsNothrowSwappable;
 using swap_internal::IsSwappable;
-using swap_internal::Swap;
 using swap_internal::StdSwapIsUnconstrained;
+using swap_internal::Swap;
 
 }  // namespace type_traits_internal
 ABSL_NAMESPACE_END

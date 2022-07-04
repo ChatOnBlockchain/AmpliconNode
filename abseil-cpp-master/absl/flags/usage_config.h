@@ -58,7 +58,7 @@ namespace absl {
 ABSL_NAMESPACE_BEGIN
 
 namespace flags_internal {
-using FlagKindFilter = std::function<bool (absl::string_view)>;
+using FlagKindFilter = std::function<bool(absl::string_view)>;
 }  // namespace flags_internal
 
 // FlagsUsageConfig

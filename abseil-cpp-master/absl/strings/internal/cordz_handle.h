@@ -115,7 +115,7 @@ class CordzHandle {
   // dq_prev_ and dq_next_ require the global queue mutex to be held.
   // Unfortunately we can't use thread annotations such that the thread safety
   // analysis understands that queue_ and global_queue_ are one and the same.
-  CordzHandle* dq_prev_  = nullptr;
+  CordzHandle* dq_prev_ = nullptr;
   CordzHandle* dq_next_ = nullptr;
 };
 

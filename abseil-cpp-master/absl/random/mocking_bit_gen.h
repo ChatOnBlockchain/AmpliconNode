@@ -35,8 +35,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
 #include "absl/base/internal/fast_type_id.h"
 #include "absl/container/flat_hash_map.h"
 #include "absl/meta/type_traits.h"
@@ -48,6 +46,8 @@
 #include "absl/types/span.h"
 #include "absl/types/variant.h"
 #include "absl/utility/utility.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 
 namespace absl {
 ABSL_NAMESPACE_BEGIN

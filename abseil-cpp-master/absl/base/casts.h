@@ -31,7 +31,7 @@
 
 #if defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
 #include <bit>  // For std::bit_cast.
-#endif  // defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
+#endif          // defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
 
 #include "absl/base/internal/identity.h"
 #include "absl/base/macros.h"
@@ -163,7 +163,7 @@ template <typename Dest, typename Source,
 inline constexpr Dest bit_cast(const Source& source) {
   return __builtin_bit_cast(Dest, source);
 }
-#else  // ABSL_HAVE_BUILTIN(__builtin_bit_cast)
+#else   // ABSL_HAVE_BUILTIN(__builtin_bit_cast)
 inline Dest bit_cast(const Source& source) {
   Dest dest;
   memcpy(static_cast<void*>(std::addressof(dest)),

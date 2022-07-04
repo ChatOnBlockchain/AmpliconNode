@@ -143,17 +143,17 @@ struct Generator<std::unique_ptr<T>> {
 
 template <class U>
 struct Generator<U, absl::void_t<decltype(std::declval<U&>().key()),
-                                decltype(std::declval<U&>().value())>>
+                                 decltype(std::declval<U&>().value())>>
     : Generator<std::pair<
           typename std::decay<decltype(std::declval<U&>().key())>::type,
           typename std::decay<decltype(std::declval<U&>().value())>::type>> {};
 
 template <class Container>
-using GeneratedType = decltype(
-    std::declval<const Generator<
-        typename std::conditional<generator_internal::IsMap<Container>::value,
-                                  typename Container::value_type,
-                                  typename Container::key_type>::type>&>()());
+using GeneratedType =
+    decltype(std::declval<const Generator<typename std::conditional<
+                 generator_internal::IsMap<Container>::value,
+                 typename Container::value_type,
+                 typename Container::key_type>::type>&>()());
 
 // Naive wrapper that performs a linear search of previous values.
 // Beware this is O(SQR), which is reasonable for smaller kMaxValues.

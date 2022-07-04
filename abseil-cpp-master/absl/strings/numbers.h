@@ -125,8 +125,7 @@ namespace numbers_internal {
 ABSL_DLL extern const char kHexChar[17];  // 0123456789abcdef
 ABSL_DLL extern const char
     kHexTable[513];  // 000102030405060708090a0b0c0d0e0f1011...
-ABSL_DLL extern const char
-    two_ASCII_digits[100][2];  // 00, 01, 02, 03...
+ABSL_DLL extern const char two_ASCII_digits[100][2];  // 00, 01, 02, 03...
 
 // Writes a two-character representation of 'i' to 'buf'. 'i' must be in the
 // range 0 <= i < 100, and buf must have space for two characters. Example:
@@ -143,8 +142,7 @@ inline void PutTwoDigits(size_t i, char* buf) {
 
 bool safe_strto32_base(absl::string_view text, int32_t* value, int base);
 bool safe_strto64_base(absl::string_view text, int64_t* value, int base);
-bool safe_strto128_base(absl::string_view text, absl::int128* value,
-                         int base);
+bool safe_strto128_base(absl::string_view text, absl::int128* value, int base);
 bool safe_strtou32_base(absl::string_view text, uint32_t* value, int base);
 bool safe_strtou64_base(absl::string_view text, uint64_t* value, int base);
 bool safe_strtou128_base(absl::string_view text, absl::uint128* value,
@@ -249,10 +247,10 @@ inline size_t FastHexToBufferZeroPad16(uint64_t val, char* out) {
   const auto kHexDigits = _mm_setr_epi8('0', '1', '2', '3', '4', '5', '6', '7',
                                         '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
   auto v = _mm_loadl_epi64(reinterpret_cast<__m128i*>(&be));  // load lo dword
-  auto v4 = _mm_srli_epi64(v, 4);                            // shift 4 right
-  auto il = _mm_unpacklo_epi8(v4, v);                        // interleave bytes
-  auto m = _mm_and_si128(il, kNibbleMask);                   // mask out nibbles
-  auto hexchars = _mm_shuffle_epi8(kHexDigits, m);           // hex chars
+  auto v4 = _mm_srli_epi64(v, 4);                             // shift 4 right
+  auto il = _mm_unpacklo_epi8(v4, v);               // interleave bytes
+  auto m = _mm_and_si128(il, kNibbleMask);          // mask out nibbles
+  auto hexchars = _mm_shuffle_epi8(kHexDigits, m);  // hex chars
   _mm_storeu_si128(reinterpret_cast<__m128i*>(out), hexchars);
 #else
   for (int i = 0; i < 8; ++i) {

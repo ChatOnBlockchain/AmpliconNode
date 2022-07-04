@@ -431,11 +431,12 @@ class Status final {
   Status();
 
   // Creates a status in the canonical error space with the specified
-  // `absl::StatusCode` and error message.  If `code == absl::StatusCode::kOk`,  // NOLINT
-  // `msg` is ignored and an object identical to an OK status is constructed.
+  // `absl::StatusCode` and error message.  If `code == absl::StatusCode::kOk`,
+  // // NOLINT `msg` is ignored and an object identical to an OK status is
+  // constructed.
   //
-  // The `msg` string must be in UTF-8. The implementation may complain (e.g.,  // NOLINT
-  // by printing a warning) if it is not.
+  // The `msg` string must be in UTF-8. The implementation may complain (e.g.,
+  // // NOLINT by printing a warning) if it is not.
   Status(absl::StatusCode code, absl::string_view msg);
 
   Status(const Status&);

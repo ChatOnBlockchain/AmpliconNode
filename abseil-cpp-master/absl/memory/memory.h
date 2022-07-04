@@ -422,7 +422,7 @@ struct pointer_traits<T*> {
 //
 #if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::allocator_traits;
-#else  // __cplusplus >= 201703L
+#else   // __cplusplus >= 201703L
 template <typename Alloc>
 struct allocator_traits {
   using allocator_type = Alloc;

@@ -213,11 +213,10 @@ constexpr const char* SkipNumber(const char* format) {
 }
 
 constexpr int PlaceholderBitmask(const char* format) {
-  return !*format
-             ? 0
-             : *format != '$' ? PlaceholderBitmask(format + 1)
-                              : (CalculateOneBit(format + 1) |
-                                 PlaceholderBitmask(SkipNumber(format + 1)));
+  return !*format         ? 0
+         : *format != '$' ? PlaceholderBitmask(format + 1)
+                          : (CalculateOneBit(format + 1) |
+                             PlaceholderBitmask(SkipNumber(format + 1)));
 }
 #endif  // ABSL_BAD_CALL_IF
 

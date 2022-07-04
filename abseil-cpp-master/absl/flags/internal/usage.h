@@ -50,8 +50,8 @@ void FlagHelp(std::ostream& out, const CommandLineFlag& flag,
 //  .../path/to/file.<ext>
 // for any extension 'ext'. If the filter is empty this function produces help
 // messages for all flags.
-void FlagsHelp(std::ostream& out, absl::string_view filter,
-               HelpFormat format, absl::string_view program_usage_message);
+void FlagsHelp(std::ostream& out, absl::string_view filter, HelpFormat format,
+               absl::string_view program_usage_message);
 
 // --------------------------------------------------------------------
 

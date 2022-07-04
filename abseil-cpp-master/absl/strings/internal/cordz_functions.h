@@ -41,7 +41,7 @@ void set_cordz_mean_interval(int32_t mean_interval);
 // Hashtablez is turned off completely in opensource builds.
 // MSVC's static atomics are dynamically initialized in debug mode, which breaks
 // sampling.
-#if defined(ABSL_HAVE_THREAD_LOCAL) && !defined(_MSC_VER)  && \
+#if defined(ABSL_HAVE_THREAD_LOCAL) && !defined(_MSC_VER) &&  \
     !defined(ABSL_BUILD_DLL) && !defined(ABSL_CONSUME_DLL) && \
     !defined(__ANDROID__) && !defined(__APPLE__)
 #define ABSL_INTERNAL_CORDZ_ENABLED 1

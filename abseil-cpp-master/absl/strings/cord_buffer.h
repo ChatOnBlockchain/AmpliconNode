@@ -160,7 +160,6 @@ class CordBuffer {
   // for more information on buffer capacities and intended usage.
   static CordBuffer CreateWithDefaultLimit(size_t capacity);
 
-
   // CordBuffer::CreateWithCustomLimit()
   //
   // Creates a CordBuffer instance of the desired `capacity` rounded to an

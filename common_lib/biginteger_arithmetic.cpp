@@ -50,7 +50,7 @@ namespace {
             return;
         }
         size_t output_length = input.length() + 1;
-        std::vector<char> buffer(/*n=*/output_length, /*value=*/0);
+        std::vector<char> buffer(/*n=*/output_length, /*value=*/'0');
         int buffer_pos = output_length - 1;
         bool has_carryover = false;
         for (int i = input.length() - 1; i >= 0; --i) {
@@ -59,43 +59,19 @@ namespace {
                 ++temp;
                 has_carryover = false;
             }
-            if (temp > 10) {
+            if (temp >= 10) {
                 has_carryover = true;
                 temp -= 10;
             }
             buffer[buffer_pos--] = '0' + temp;
         }
+        if (has_carryover) {
+            buffer[buffer_pos] = '1';
+        }
+        const int offset = buffer.front() == '0' ? 1 : 0;
+        *output = std::string(buffer.begin() + offset, buffer.end());
     }
 
-    void multiply_by_2(const std::string &input, std::string *output) {
-        if (input == "0") {
-            *output = "0";
-            return;
-        }
-        size_t output_length = input.length();
-        if (input.front() > '4') {
-            ++output_length;
-        }
-        char buffer[output_length];
-        bool has_carryover = false;
-        int bufferpos = output_length - 1;
-        for (const char &c: input) {
-            int temp = ('c' - '0') * 2;
-            if (has_carryover) {
-                ++temp;
-                has_carryover = false;
-            }
-            if (temp >= 10) {
-                has_carryover = true;
-                temp -= 10;
-            }
-            buffer[bufferpos--] = '0' + temp;
-        }
-        if (has_carryover) {
-            buffer[bufferpos--] = '1';
-        }
-        *output = buffer;
-    }
 
     void add_in_place_with_reversed_char_number(const std::string &a, std::vector<char> *b) {
         bool has_carryover = false;
@@ -105,14 +81,23 @@ namespace {
                 ++temp;
                 has_carryover = false;
             }
-            if (temp > 10) {
+            if (temp >= 10) {
                 has_carryover = true;
                 temp -= 10;
             }
             (*b)[a.length() - 1 - i] = temp + '0';
         }
-        if (has_carryover) {
-            (*b)[a.length()] = '1';
+
+        int j = a.length();
+        while (has_carryover && j < b->size()) {
+            int temp = (*b)[j] - '0' + 1;
+            has_carryover = false;
+            if (temp >= 10) {
+                has_carryover = true;
+                temp -= 10;
+            }
+            (*b)[j] = '0' + temp;
+            ++j;
         }
     }
 
@@ -122,24 +107,6 @@ namespace {
         }
     }
 
-    void multiply_two_big_integers(const std::string &a, const std::string &b, std::string *output) {
-        if (a.length() < b.length()) {
-            return multiply_two_big_integers(b, a, output);
-        }
-        std::vector<char> buffer(/*n=*/a.length() * b.length() + 1, /*value=*/'0');
-        std::string temp1;
-        int num_zeros_to_pad = 0;
-        for (const char &c: b) {
-            multiply_by_digit(a, c - '0', &temp1);
-            pad_string_with_zeros(num_zeros_to_pad++, &temp1);
-            add_in_place_with_reversed_char_number(temp1, &buffer);
-            temp1.clear();
-        }
-        if (buffer.back() == '0') {
-            buffer.pop_back();
-        }
-        *output = std::string(buffer.end(), buffer.begin());
-    }
 
     void get_power_of_2(int n, std::string *output) {
         static absl::flat_hash_map<int, std::string> powers_of_2;
@@ -151,7 +118,7 @@ namespace {
             std::string temp;
             std::string temp2;
             get_power_of_2(n - 1, &temp);
-            multiply_by_2(temp, &temp2);
+            multiply_by_digit(temp,/*digit=*/2, &temp2);
             powers_of_2[n] = temp2;
         }
         *output = powers_of_2[n];
@@ -250,12 +217,60 @@ namespace common_lib {
                     add_in_place_with_reversed_char_number(pow_2, &buffer);
                     pow_2.clear();
                 }
+                temp = temp >> 1;
+                ++j;
             }
         }
         if (buffer.back() == '0') {
             buffer.pop_back();
         }
-        const std::string output = std::string(buffer.end(), buffer.begin());
+        std::reverse(buffer.begin(), buffer.end());
+        std::string output = std::string(buffer.begin(), buffer.end());
+        return output;
+    }
+
+    absl::StatusOr<BigInteger> add(const BigInteger &a, const BigInteger &b, const int max_uint_32_blocks) {
+        if (a.value().empty() || b.value().empty()) {
+            return absl::InvalidArgumentError("Empty values cannot be added.");
+        }
+        if(a.value_size() < b.value_size()){
+            return add(b,a,max_uint_32_blocks);
+        }
+        int max_blocks = a.value_size();
+        if(max_uint_32_blocks > 0 && max_uint_32_blocks < max_blocks){
+            max_blocks = max_uint_32_blocks;
+        }
+        int min_blocks = b.value_size();
+        if(min_blocks > max_blocks){
+            min_blocks = max_blocks;
+        }
+        bool has_carryover = false;
+        BigInteger output;
+        int i = 0;
+        for(; i < min_blocks;++i){
+             uint64_t temp = a.value(i) + b.value(i);
+            if(has_carryover){
+                ++temp;
+                has_carryover = false;
+            }
+            if(temp > UINT32_MAX){
+                has_carryover = true;
+                temp = temp % UINT32_MAX;
+            }
+            output.add_value((uint32_t)temp);
+        }
+        for(; i < max_blocks; ++i){
+            uint64_t temp = a.value(i);
+            if(has_carryover){
+                ++temp;
+                has_carryover = false;
+            }
+            if(temp > UINT32_MAX){
+                has_carryover = true;
+                temp = temp % UINT32_MAX;
+            }
+            output.add_value((uint32_t)temp);
+        }
         return output;
     }
 }

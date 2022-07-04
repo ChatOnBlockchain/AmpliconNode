@@ -36,7 +36,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "gtest/gtest.h"
 #include "absl/meta/type_traits.h"
 #include "absl/strings/ascii.h"
 #include "absl/strings/str_cat.h"
@@ -48,6 +47,7 @@
 #include "absl/types/internal/parentheses.h"
 #include "absl/types/internal/transform_args.h"
 #include "absl/utility/utility.h"
+#include "gtest/gtest.h"
 
 namespace absl {
 ABSL_NAMESPACE_BEGIN

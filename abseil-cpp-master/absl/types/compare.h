@@ -89,8 +89,7 @@ enum class ncmp : value_type { unordered = -127 };
 // A no-op expansion that can be followed by a semicolon at class level.
 #define ABSL_COMPARE_INLINE_BASECLASS_DECL(name) static_assert(true, "")
 
-#define ABSL_COMPARE_INLINE_SUBCLASS_DECL(type, name) \
-  static const type name
+#define ABSL_COMPARE_INLINE_SUBCLASS_DECL(type, name) static const type name
 
 #define ABSL_COMPARE_INLINE_INIT(type, name, init) \
   inline constexpr type type::name(init)
@@ -546,7 +545,9 @@ namespace compare_internal {
 // SFINAE prevents implicit conversions to bool (such as from int).
 template <typename Bool,
           absl::enable_if_t<std::is_same<bool, Bool>::value, int> = 0>
-constexpr bool compare_result_as_less_than(const Bool r) { return r; }
+constexpr bool compare_result_as_less_than(const Bool r) {
+  return r;
+}
 constexpr bool compare_result_as_less_than(const absl::weak_ordering r) {
   return r < 0;
 }
@@ -563,9 +564,9 @@ constexpr bool do_less_than_comparison(const Compare &compare, const K &x,
 template <typename Int,
           absl::enable_if_t<std::is_same<int, Int>::value, int> = 0>
 constexpr absl::weak_ordering compare_result_as_ordering(const Int c) {
-  return c < 0 ? absl::weak_ordering::less
-               : c == 0 ? absl::weak_ordering::equivalent
-                        : absl::weak_ordering::greater;
+  return c < 0    ? absl::weak_ordering::less
+         : c == 0 ? absl::weak_ordering::equivalent
+                  : absl::weak_ordering::greater;
 }
 constexpr absl::weak_ordering compare_result_as_ordering(
     const absl::weak_ordering c) {
@@ -588,9 +589,9 @@ template <
                       int> = 0>
 constexpr absl::weak_ordering do_three_way_comparison(const Compare &compare,
                                                       const K &x, const LK &y) {
-  return compare(x, y) ? absl::weak_ordering::less
-                       : compare(y, x) ? absl::weak_ordering::greater
-                                       : absl::weak_ordering::equivalent;
+  return compare(x, y)   ? absl::weak_ordering::less
+         : compare(y, x) ? absl::weak_ordering::greater
+                         : absl::weak_ordering::equivalent;
 }
 
 }  // namespace compare_internal

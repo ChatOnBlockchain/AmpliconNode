@@ -112,11 +112,10 @@ class Charmap {
   // All the chars in the specified word of the range [0, upper).
   static constexpr uint64_t OpenRangeFromZeroForWord(uint64_t upper,
                                                      uint64_t word) {
-    return (upper <= 64 * word)
-               ? 0
-               : (upper >= 64 * (word + 1))
-                     ? ~static_cast<uint64_t>(0)
-                     : (~static_cast<uint64_t>(0) >> (64 - upper % 64));
+    return (upper <= 64 * word) ? 0
+           : (upper >= 64 * (word + 1))
+               ? ~static_cast<uint64_t>(0)
+               : (~static_cast<uint64_t>(0) >> (64 - upper % 64));
   }
 
   static constexpr uint64_t CharMaskForWord(unsigned char x, uint64_t word) {

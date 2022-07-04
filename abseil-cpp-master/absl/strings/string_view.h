@@ -511,8 +511,7 @@ class string_view {
 
   // Overload of `string_view::find_first_of()` for finding a substring of a
   // different C-style string `s` within the `string_view`.
-  size_type find_first_of(const char* s, size_type pos,
-                                    size_type count) const {
+  size_type find_first_of(const char* s, size_type pos, size_type count) const {
     return find_first_of(string_view(s, count), pos);
   }
 

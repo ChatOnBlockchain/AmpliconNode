@@ -758,8 +758,7 @@ void* FlagOps(FlagOp op, const void* v1, void* v2, void* v3) {
       // Round sizeof(FlagImp) to a multiple of alignof(FlagValue<T>) to get the
       // offset of the data.
       size_t round_to = alignof(FlagValue<T>);
-      size_t offset =
-          (sizeof(FlagImpl) + round_to - 1) / round_to * round_to;
+      size_t offset = (sizeof(FlagImpl) + round_to - 1) / round_to * round_to;
       return reinterpret_cast<void*>(offset);
     }
   }

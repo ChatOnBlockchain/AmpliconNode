@@ -87,13 +87,11 @@ constexpr std::array<absl::LogSeverity, 4> LogSeverities() {
 // Returns the all-caps string representation (e.g. "INFO") of the specified
 // severity level if it is one of the standard levels and "UNKNOWN" otherwise.
 constexpr const char* LogSeverityName(absl::LogSeverity s) {
-  return s == absl::LogSeverity::kInfo
-             ? "INFO"
-             : s == absl::LogSeverity::kWarning
-                   ? "WARNING"
-                   : s == absl::LogSeverity::kError
-                         ? "ERROR"
-                         : s == absl::LogSeverity::kFatal ? "FATAL" : "UNKNOWN";
+  return s == absl::LogSeverity::kInfo      ? "INFO"
+         : s == absl::LogSeverity::kWarning ? "WARNING"
+         : s == absl::LogSeverity::kError   ? "ERROR"
+         : s == absl::LogSeverity::kFatal   ? "FATAL"
+                                            : "UNKNOWN";
 }
 
 // NormalizeLogSeverity()
@@ -101,9 +99,9 @@ constexpr const char* LogSeverityName(absl::LogSeverity s) {
 // Values less than `kInfo` normalize to `kInfo`; values greater than `kFatal`
 // normalize to `kError` (**NOT** `kFatal`).
 constexpr absl::LogSeverity NormalizeLogSeverity(absl::LogSeverity s) {
-  return s < absl::LogSeverity::kInfo
-             ? absl::LogSeverity::kInfo
-             : s > absl::LogSeverity::kFatal ? absl::LogSeverity::kError : s;
+  return s < absl::LogSeverity::kInfo    ? absl::LogSeverity::kInfo
+         : s > absl::LogSeverity::kFatal ? absl::LogSeverity::kError
+                                         : s;
 }
 constexpr absl::LogSeverity NormalizeLogSeverity(int s) {
   return absl::NormalizeLogSeverity(static_cast<absl::LogSeverity>(s));

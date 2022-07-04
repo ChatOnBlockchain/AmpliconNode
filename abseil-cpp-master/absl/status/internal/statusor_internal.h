@@ -143,7 +143,8 @@ class Helper {
 // the constructor.
 // This abstraction is here mostly for the gcc performance fix.
 template <typename T, typename... Args>
-ABSL_ATTRIBUTE_NONNULL(1) void PlacementNew(void* p, Args&&... args) {
+ABSL_ATTRIBUTE_NONNULL(1)
+void PlacementNew(void* p, Args&&... args) {
   new (p) T(std::forward<Args>(args)...);
 }
 
@@ -202,12 +203,8 @@ class StatusOrData {
     MakeStatus();
   }
 
-  explicit StatusOrData(const T& value) : data_(value) {
-    MakeStatus();
-  }
-  explicit StatusOrData(T&& value) : data_(std::move(value)) {
-    MakeStatus();
-  }
+  explicit StatusOrData(const T& value) : data_(value) { MakeStatus(); }
+  explicit StatusOrData(T&& value) : data_(std::move(value)) { MakeStatus(); }
 
   template <typename U,
             absl::enable_if_t<std::is_constructible<absl::Status, U&&>::value,

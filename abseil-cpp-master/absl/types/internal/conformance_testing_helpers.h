@@ -333,11 +333,10 @@ void ForEveryTwo(const Fun& fun, std::tuple<T...> args) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Insert all values into an associative container
-template<class Container>
-void InsertEach(Container* cont) {
-}
+template <class Container>
+void InsertEach(Container* cont) {}
 
-template<class Container, class H, class... T>
+template <class Container, class H, class... T>
 void InsertEach(Container* cont, H&& head, T&&... tail) {
   cont->insert(head);
   (InsertEach)(cont, tail...);
