@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+
 namespace common_lib {
 class kmp_search {
 public:

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package node_list_server;
+
+service NodeListServer {
+  rpc GetPeerNodes (NodeListServerRequest) returns (NodeListServerResponse) {}
+}
+
+message NodeListServerRequest {
+  string requesting_node_id = 1;
+  uint32 number_of_peers_requested = 2;
+  uint64 request_timestamp_nanos = 3;
+}
+
+message NodeInfo{
+  string node_id = 1;
+  string node_ip = 2;
+}
+
+message NodeListServerResponse {
+  repeated NodeInfo peer_nodes = 1;
+}

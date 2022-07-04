@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package node;
+import "biginteger.proto";
+
+service Node {
+  rpc AddNodeToConnections(AddNodeToConnectionsRequest) returns (AddNodeToConnectionsResponse) {}
+  rpc IsNodeLive(IsNodeLiveRequest) returns (IsNodeLiveResponse) {}
+  rpc RelayMessage(RelayMessageRequest) returns (RelayMessageResponse) {}
+}
+
+message AddNodeToConnectionsRequest{}
+message AddNodeToConnectionsResponse{}
+
+message IsNodeLiveRequest {}
+message IsNodeLiveResponse {}
+
+message RelayMessageRequest {}
+message RelayMessageResponse {}
+
+message NodeParams{
+  string node_id = 1;
+  string node_ip = 2;
+  biginteger.BigInteger private_key = 3;
+}

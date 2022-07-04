@@ -8,6 +8,7 @@
 
 using ::testing::ElementsAreArray;
 using namespace common_lib;
+
 class KmpSearchTest : public ::testing::Test {
 };
 
