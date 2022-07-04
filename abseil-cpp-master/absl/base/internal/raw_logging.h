@@ -176,8 +176,8 @@ using InternalLogFunction = void (*)(absl::LogSeverity severity,
                                      const std::string& message);
 
 ABSL_INTERNAL_ATOMIC_HOOK_ATTRIBUTES
-    ABSL_DLL extern base_internal::AtomicHook<InternalLogFunction>
-        internal_log_function;
+ABSL_DLL extern base_internal::AtomicHook<InternalLogFunction>
+    internal_log_function;
 
 // Registers hooks of the above types.  Only a single hook of each type may be
 // registered.  It is an error to call these functions multiple times with

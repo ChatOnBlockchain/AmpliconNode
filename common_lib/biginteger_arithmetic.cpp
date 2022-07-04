@@ -221,7 +221,7 @@ namespace common_lib {
                 ++j;
             }
         }
-        if (buffer.back() == '0') {
+        while (buffer.back() == '0') {
             buffer.pop_back();
         }
         std::reverse(buffer.begin(), buffer.end());
@@ -236,7 +236,7 @@ namespace common_lib {
         if(a.value_size() < b.value_size()){
             return add(b,a,max_uint_32_blocks);
         }
-        int max_blocks = a.value_size();
+        int max_blocks = a.value_size() + 1;
         if(max_uint_32_blocks > 0 && max_uint_32_blocks < max_blocks){
             max_blocks = max_uint_32_blocks;
         }
@@ -248,18 +248,18 @@ namespace common_lib {
         BigInteger output;
         int i = 0;
         for(; i < min_blocks;++i){
-             uint64_t temp = a.value(i) + b.value(i);
+            uint64_t temp = (uint64_t )a.value(i) + (uint64_t )b.value(i);
             if(has_carryover){
                 ++temp;
                 has_carryover = false;
             }
             if(temp > UINT32_MAX){
                 has_carryover = true;
-                temp = temp % UINT32_MAX;
+                temp = temp % ((uint64_t)UINT32_MAX +1);
             }
             output.add_value((uint32_t)temp);
         }
-        for(; i < max_blocks; ++i){
+        for(; i < a.value_size(); ++i){
             uint64_t temp = a.value(i);
             if(has_carryover){
                 ++temp;
@@ -270,6 +270,9 @@ namespace common_lib {
                 temp = temp % UINT32_MAX;
             }
             output.add_value((uint32_t)temp);
+        }
+        if(has_carryover && i < max_blocks){
+            output.add_value(/*value=*/1);
         }
         return output;
     }
