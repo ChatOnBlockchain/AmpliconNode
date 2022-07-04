@@ -1,0 +1,12 @@
+syntax = "proto3";
+package common_lib;
+import "biginteger.proto";
+
+message FiniteFieldDescriptor {
+  BigInteger order = 1;
+}
+
+message FiniteFieldElement{
+  BigInteger value = 1;
+  FiniteFieldDescriptor finite_field = 2;
+}

@@ -1,0 +1,6 @@
+syntax = "proto3";
+package common_lib;
+
+message BigInteger{
+  repeated uint32 value = 1;
+}
