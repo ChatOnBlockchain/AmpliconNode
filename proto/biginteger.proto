@@ -2,5 +2,6 @@ syntax = "proto3";
 package common_lib;
 
 message BigInteger{
-  repeated uint32 value = 1;
+  bool is_negative = 1;
+  repeated uint32 value = 2;
 }

@@ -126,7 +126,12 @@ namespace common_lib {
         }
 
         bool is_valid_numeric_string(const std::string &input) {
+            bool found_sign = false;
             for (const auto &c: input) {
+                if (!found_sign && (c == '-' || c == '+')) {
+                    found_sign = true;
+                    continue;
+                }
                 if (c < '0' || c > '9') {
                     return false;
                 }
@@ -172,9 +177,52 @@ namespace common_lib {
                 temp2.clear();
             }
         }
+
+        void multiply_big_integer_with_uint32(const BigInteger &a, const uint32_t b, BigInteger *output) {
+            uint64_t carry_over = 0;
+            for (int i = 0; i < a.value_size(); ++i) {
+                uint64_t temp = a.value(i) * b;
+                if (carry_over > 0) {
+                    temp += carry_over;
+                    carry_over = 0;
+                }
+                carry_over = temp >> kBlockBitSize;
+                output->add_value((uint32_t) (temp & UINT32_MAX));
+            }
+            if (carry_over > 0) {
+                output->add_value(carry_over);
+            }
+        }
+
+        void shift_blocks_left(const BigInteger &input, const int num_blocks, const int max_output_blocks,
+                               BigInteger *output) {
+            int max_blocks = input.value_size() + num_blocks;
+            if (max_output_blocks > 0 && max_blocks > max_output_blocks) {
+                max_blocks = max_output_blocks;
+            }
+            int i = 0;
+            while (i < num_blocks && i < max_blocks) {
+                output->add_value(0);
+                ++i;
+            }
+            while (i < input.value_size() + num_blocks && i < max_blocks) {
+                output->add_value(input.value(i - num_blocks));
+                ++i;
+            }
+        }
+
+        bool have_same_sign(const BigInteger &a, const BigInteger &b) {
+            return a.is_negative() == b.is_negative();
+        }
+
+        void toggle_sign(const BigInteger &input, BigInteger* output){
+            *output = input;
+            output->set_is_negative(!input.is_negative());
+        }
+
     } //namespace
 
-    absl::StatusOr<BigInteger> convertNumericDecimalStringToBigInteger(const std::string &input) {
+    absl::StatusOr<BigInteger> convert_numeric_decimal_string_to_biginteger(const std::string &input) {
         if (input.empty()) {
             return absl::InvalidArgumentError("Empty input provided.");
         }
@@ -182,8 +230,10 @@ namespace common_lib {
             return absl::InvalidArgumentError("Invalid characters found in unsigned integral string.");
         }
 
+        std::string integral_string_without_sign = (input.front() == '-' || input.front() == '+') ? std::string(
+                input.begin() + 1, input.end()) : input;
         std::vector<bool> bitarray;
-        get_binary_representation(input, &bitarray);
+        get_binary_representation(integral_string_without_sign, &bitarray);
         BigInteger output;
         int bitcount = 0;
         uint32_t temp_value = 0;
@@ -198,10 +248,13 @@ namespace common_lib {
         if (temp_value > 0) {
             output.add_value(temp_value);
         }
+        if(input.front() == '-'){
+            output.set_is_negative(true);
+        }
         return output;
     }
 
-    absl::StatusOr<std::string> convertBigIntegerToDecimalString(const BigInteger &input) {
+    absl::StatusOr<std::string> convert_biginteger_to_decimal_string(const BigInteger &input) {
         if (input.value().empty()) {
             return absl::InvalidArgumentError("Empty value for BigInteger found.");
         }
@@ -224,21 +277,34 @@ namespace common_lib {
         while (buffer.back() == '0') {
             buffer.pop_back();
         }
+        if(input.is_negative()){
+            buffer.push_back('-');
+        }
         std::reverse(buffer.begin(), buffer.end());
         std::string output = std::string(buffer.begin(), buffer.end());
         return output;
     }
 
-    absl::StatusOr<BigInteger> add(const BigInteger &a, const BigInteger &b, const int max_uint_32_blocks) {
+    absl::StatusOr<BigInteger> add(const BigInteger &a, const BigInteger &b, const int max_uint32_blocks) {
         if (a.value().empty() || b.value().empty()) {
             return absl::InvalidArgumentError("Empty values cannot be added.");
         }
         if (a.value_size() < b.value_size()) {
-            return add(b, a, max_uint_32_blocks);
+            return add(b, a, max_uint32_blocks);
         }
+        if (!have_same_sign(a, b)) {
+            BigInteger toggled_input;
+            if(a.is_negative()){
+                toggle_sign(a, &toggled_input);
+                return subtract(b, toggled_input, max_uint32_blocks);
+            }
+            toggle_sign(b, &toggled_input);
+            return subtract(a, toggled_input, max_uint32_blocks);
+        }
+
         int max_blocks = a.value_size() + 1;
-        if (max_uint_32_blocks > 0 && max_uint_32_blocks < max_blocks) {
-            max_blocks = max_uint_32_blocks;
+        if (max_uint32_blocks > 0 && max_uint32_blocks < max_blocks) {
+            max_blocks = max_uint32_blocks;
         }
         int min_blocks = b.value_size();
         if (min_blocks > max_blocks) {
@@ -273,6 +339,58 @@ namespace common_lib {
         }
         if (has_carryover && i < max_blocks) {
             output.add_value(/*value=*/1);
+        }
+        return output;
+    }
+
+    absl::StatusOr<BigInteger> subtract(const BigInteger &a, const BigInteger &b, const int max_uint32_blocks) {
+        if (a.value().empty() || b.value().empty()) {
+            return absl::InvalidArgumentError("Empty values cannot be added.");
+        }
+        if (a.value_size() < b.value_size()) {
+            return add(b, a, max_uint32_blocks);
+        }
+        if (!have_same_sign(a, b)) {
+            BigInteger toggled_input;
+            toggle_sign(b, &toggled_input);
+            return add(a, toggled_input, max_uint32_blocks);
+        }
+
+        BigInteger output;
+        output.add_value(0); // Zero initialization
+        return output;
+    }
+
+    absl::StatusOr<BigInteger> multiply(const BigInteger &a, const BigInteger &b,
+                                        const int max_uint_32_blocks) {
+        if (a.value().empty() || b.value().empty()) {
+            return absl::InvalidArgumentError("Empty values cannot be multiplied.");
+        }
+        if (a.value_size() < b.value_size()) {
+            return multiply(b, a, max_uint_32_blocks);
+        }
+
+        int max_blocks = a.value_size() * b.value_size() + 1;
+        if (max_uint_32_blocks > 0 && max_uint_32_blocks < max_blocks) {
+            max_blocks = max_uint_32_blocks;
+        }
+        BigInteger output;
+        output.add_value(0); // Zero initialization
+
+        if (b.value_size() == 1 && b.value(0) == 0) {
+            return output;
+        }
+
+        for (int i = 0; i < b.value_size(); ++i) {
+            BigInteger temp1;
+            multiply_big_integer_with_uint32(a, b.value(i), &temp1);
+            BigInteger temp2;
+            shift_blocks_left(temp1, i, max_blocks, &temp2);
+            const absl::StatusOr<BigInteger> temp_result = add(output, temp2, max_blocks);
+            output = *temp_result;
+        }
+        if (!have_same_sign(a, b)) {
+            output.set_is_negative(true);
         }
         return output;
     }

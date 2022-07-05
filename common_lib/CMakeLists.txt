@@ -10,7 +10,7 @@ include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ../proto/biginteger.proto ../proto/finite_field.proto)
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ../proto/biginteger.proto ../proto/finite_field.proto ../proto/node.proto ../proto/nodes_list_server.proto)
 
 set(HEADER_FILES
         kmp_search.h
